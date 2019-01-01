@@ -2,6 +2,24 @@
 
 let player;
 let allEnemies;
+
+let isModalOpen = false;
+
+// Modal de Fim de Jogo
+let modal = new tingle.modal({
+    closeMethods: ['overlay', 'button', 'escape'],
+    closeLabel: "Close",
+    onOpen: function() {
+        isModalOpen = true;
+    },
+    onClose: function() {
+        isModalOpen = false;
+        spawnCharacters();
+    }
+});
+
+modal.setContent("<h1 class='modalVitoria'>Parabéns, você venceu!</h1>");
+
 // Inimigos que nosso jogador deve evitar
 
 class Enemy {
@@ -29,6 +47,7 @@ class Enemy {
         // dt, o que garantirá que o jogo rode na mesma velocidade
         // em qualquer computador.
         if (this.movX === undefined) { return; }
+        if (isModalOpen) {return};
 
         this.x += this.speed * dt;
 
@@ -45,6 +64,7 @@ class Enemy {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
+    // Gera velocidade de movimento aleatória para cada inimigo, com um valor mínimo.
     getRandomMovementSpeed() {
         let randomSpeed = Math.random();
         let minSpeed = 0.3;
@@ -70,15 +90,16 @@ class Player {
 
     update(dt) {
         if (this.movX === undefined || this.movY === undefined) { return; };
+        if (isModalOpen) {return};
 
         this.x += this.movX;
         this.y += this.movY;
 
-        if (!this.detectVictory()){
-            this.detectEnviromentCollision();
-        }
-            
+        this.detectVictory();
 
+        this.detectEnviromentCollision();
+
+        // Verifica colisão com cada um dos inimigos
         for (let i = 0; i < allEnemies.length; i++) {
             if (this.detectCollision(allEnemies[i])) {
                 spawnCharacters();
@@ -93,6 +114,7 @@ class Player {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     }
 
+    // Registra comandos do usuário.
     handleInput(key) {
         switch (key) {
             case 'left':
@@ -110,6 +132,7 @@ class Player {
         }
     }
 
+    // Verifica colisão com um Inimigo
     detectCollision(enemy) {
         const enemyCollider = {
             x: enemy.x,
@@ -131,17 +154,17 @@ class Player {
             enemyCollider.height + enemyCollider.y > playerCollider.y) ? true : false;
     }
 
+    // Verifica se o jogador chegou na água e chama tratamento de fim de jogo
     detectVictory() {
         if (this.y < 50) {
-            setTimeout( function(){
-                spawnCharacters();
-            }, 500);
-            ctx.font = '30px monospace';
-            ctx.fillText("Great job! You won", 500, 450);
+            if (!isModalOpen) {
+                modal.open();
+            }
             return true;
-        }        
+        }       
     }
 
+    // Verifica se o jogador colidiu com alguma parede
     detectEnviromentCollision() {
         const canvas = {
             width: $("#canvas").attr("width"),
@@ -154,6 +177,7 @@ class Player {
     }
 }
 
+// Recria todos os personagens
 function spawnCharacters() {
     player = new Player();
     allEnemies = [new Enemy(65), new Enemy(140), new Enemy(220)];
