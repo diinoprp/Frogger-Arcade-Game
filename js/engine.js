@@ -26,7 +26,7 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-
+    $(canvas).attr("id", "canvas");
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
@@ -84,7 +84,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        //checkCollisions();
     }
 
     /* É chamada pela função update, faz loops por todos os objetos dentro
