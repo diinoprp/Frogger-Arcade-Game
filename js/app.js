@@ -12,7 +12,8 @@ class Enemy {
         this.x = 0;
         this.y = y;
         this.movX = 0;
-        this.speed = Math.random() * 200;
+        this.speed = this.getRandomMovementSpeed();
+
     }
 
     // Atualize a posição do inimigo, método exigido pelo jogo
@@ -27,6 +28,7 @@ class Enemy {
 
         if (this.x > 550) {
             this.x = -50;
+            this.speed = this.getRandomMovementSpeed();
         }
         this.movX = 0;
     }
@@ -34,6 +36,12 @@ class Enemy {
     // Desenhe o inimigo na tela, método exigido pelo jogo
     render() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+
+    getRandomMovementSpeed(){
+        let randomSpeed = Math.random();
+        let minSpeed = 0.2;
+        return (randomSpeed > minSpeed ? randomSpeed * 200 : minSpeed * 200);
     }
 }
 
@@ -81,6 +89,8 @@ class Player {
         }
     }
 }
+
+
 
 // Represente seus objetos como instâncias.
 // Coloque todos os objetos inimgos numa array allEnemies
