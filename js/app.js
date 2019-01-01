@@ -7,10 +7,12 @@ class Enemy {
     // A imagem/sprite de nossos inimigos, isso usa um
     // ajudante que é fornecido para carregar imagens
     // com facilidade.
-    constructor(x,y) {
+    constructor(y) {
         this.sprite = 'images/enemy-bug.png';
-        this.x = x;
+        this.x = 0;
         this.y = y;
+        this.movX = 0;
+        this.speed = Math.random() * 200;
     }
 
     // Atualize a posição do inimigo, método exigido pelo jogo
@@ -19,10 +21,14 @@ class Enemy {
         // Você deve multiplicar qualquer movimento pelo parâmetro
         // dt, o que garantirá que o jogo rode na mesma velocidade
         // em qualquer computador.
-        this.x += this.movX;
-        this.y += this.movY;
+        if (this.movX === undefined) {return;}
+        
+        this.x += this.speed * dt;
+
+        if (this.x > 550) {
+            this.x = -50;
+        }
         this.movX = 0;
-        this.movY = 0;
     }
 
     // Desenhe o inimigo na tela, método exigido pelo jogo
@@ -81,7 +87,7 @@ class Player {
 // Coloque o objeto do jogador numa variável chamada jogador.
 
 let player = new Player();
-let allEnemies = [new Enemy(60, 100), new Enemy(140, 75), new Enemy(230, 125)];
+let allEnemies = [new Enemy(65), new Enemy(140), new Enemy(220)];
 
 // Isto reconhece cliques em teclas e envia as chaves para seu
 // jogador. método handleInput(). Não é preciso mudar nada.
