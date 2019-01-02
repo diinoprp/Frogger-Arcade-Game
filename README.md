@@ -5,7 +5,7 @@
 
 ## Instruções
 
-- Para jogar, basta executar o arquivo index.html ou [clique aqui]()
+- Para jogar, basta executar o arquivo index.html.
 
 ## Dependências
 
